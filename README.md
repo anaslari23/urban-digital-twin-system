@@ -2,17 +2,24 @@
 
 A high-fidelity decision support system designed to simulate, analyze, and optimize urban transport networks. This platform allows city planners to test policy interventions (like bus lanes, signal timing changes, and new infrastructure) in a risk-free virtual environment before real-world deployment.
 
-![Urban Transport Twin Banner](https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&q=80&w=2626&ixlib=rb-4.0.3)
+
+![Network Map](screenshots/network_map.png)
 
 ---
 
 ## 🚀 Key Features
 
 *   **🚦 High-Fidelity Network Simulation**: Graph-based city model representing intersections (Nodes) and roads (Edges) with realistic physics including congestion, queue spillback, and variable vehicle classes.
+
+![Simulation Run](screenshots/simulation_tab.png)
+
 *   **🛠️ Policy Intervention Engine**: Apply reversible changes to the network:
     *   **infrastructure**: Add/Remove Bus Lanes, Change Lane Counts.
     *   **Control**: Modify Traffic Signal Timing (Green/Red phases).
     *   **Regulation**: Implement Speed Limits or Vehicle Restrictions.
+
+![Results Dashboard](screenshots/results_tab.png)
+
 *   **🧠 AI-Powered Analysis**: Integrated **Azure OpenAI** engine that provides causal explanations for simulation results, identifying *why* a policy worked or failed and detecting second-order effects.
 *   **📊 Real-time Analytics**: Interactive dashboards comparing Baseline vs. Intervention scenarios across metrics like Travel Time, Throughput, and Emissions (congestion proxy).
 *   **⚠️ Bottleneck Detection**: Automatic identification of network hotspots where demand exceeds capacity.
