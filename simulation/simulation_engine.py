@@ -49,13 +49,15 @@ class SimulationEngine:
         self.original_network = network
         self.network = self._deep_copy_network(network)
         self.config = config
+        self.demand_profiles: List[DemandProfile] = []
         self.demand_generator = DemandGenerator(self.network, config.seed)
         self.metrics = MetricsCollector()
         self.current_time = 0
         self.states: List[SimulationState] = []
         self.active_vehicles: Dict[str, Vehicle] = {}
         self.completed_vehicles: List[Vehicle] = []
-        self._setup_demand()
+        self._create_demand_profiles()
+        self._apply_demand_profiles()
     
     def _deep_copy_network(self, network: CityNetwork) -> CityNetwork:
         """Create a deep copy of network for simulation"""
@@ -68,24 +70,31 @@ class SimulationEngine:
             new_network.add_edge(new_edge)
         return new_network
     
-    def _setup_demand(self) -> None:
-        """Setup demand profiles"""
+    def _create_demand_profiles(self) -> None:
+        """Create and store demand profiles (called once at init)"""
+        self.demand_profiles = []
         if self.config.custom_profiles:
             for profile in self.config.custom_profiles:
                 adjusted_profile = copy.deepcopy(profile)
                 adjusted_profile.vehicles_per_minute *= self.config.demand_multiplier
-                self.demand_generator.add_profile(adjusted_profile)
+                self.demand_profiles.append(adjusted_profile)
         else:
             profiles = create_default_profiles(self.config.duration_seconds)
             for profile in profiles:
                 profile.vehicles_per_minute *= self.config.demand_multiplier
-                self.demand_generator.add_profile(profile)
+                self.demand_profiles.append(profile)
+    
+    def _apply_demand_profiles(self) -> None:
+        """Apply stored demand profiles to the demand generator"""
+        for profile in self.demand_profiles:
+            profile_copy = copy.deepcopy(profile)
+            self.demand_generator.add_profile(profile_copy)
     
     def reset(self) -> None:
         """Reset simulation to initial state"""
         self.network = self._deep_copy_network(self.original_network)
         self.demand_generator = DemandGenerator(self.network, self.config.seed)
-        self._setup_demand()
+        self._apply_demand_profiles()
         self.metrics = MetricsCollector()
         self.current_time = 0
         self.states = []
