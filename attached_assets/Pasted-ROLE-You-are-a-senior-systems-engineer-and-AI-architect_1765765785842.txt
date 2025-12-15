@@ -1,0 +1,235 @@
+ROLE
+You are a senior systems engineer and AI architect.
+Your task is to design and implement an MVP of an
+Urban Transport Digital Twin for decision support.
+
+You must build a WORKING SYSTEM, not a paper or mockup.
+
+====================================================
+SYSTEM GOAL
+====================================================
+
+Build a digital twin of an urban transport network that allows
+users to simulate policy and infrastructure changes and observe
+their system-level impacts BEFORE real-world deployment.
+
+The system must:
+- Simulate traffic evolution over time
+- Support controlled interventions
+- Produce measurable outcomes
+- Enable AI-based explanation of results
+
+This is NOT a control system.
+
+====================================================
+SYSTEM SCOPE (MVP)
+====================================================
+
+- Area: small city zone / campus / synthetic grid
+- Intersections: 20–50
+- Road segments: 50–120
+- Vehicles: simulated agents
+- Simulation duration: 1–4 hours
+- Time step: discrete (e.g., 1–5 seconds)
+
+====================================================
+HIGH-LEVEL ARCHITECTURE
+====================================================
+
+Frontend (Web UI)
+→ Policy & Scenario Manager
+→ Simulation Engine
+→ Metrics Collector
+→ AI Explanation Engine
+→ Results Visualization
+
+====================================================
+CORE MODULES TO BUILD
+====================================================
+
+1. CITY DATA MODEL
+------------------
+
+Implement a graph-based city model:
+
+- Node class:
+  - id
+  - signal phases
+  - queue lengths
+  - turn rules
+
+- Edge class:
+  - id
+  - from_node
+  - to_node
+  - length
+  - lane_count
+  - speed_limit
+  - capacity
+
+- Vehicle Agent class:
+  - id
+  - route (list of edges)
+  - current position
+  - class (car, bus, restricted)
+  - accumulated delay
+
+Store data in JSON / CSV for easy editing.
+
+----------------------------------------------------
+
+2. DEMAND GENERATOR
+-------------------
+
+Implement vehicle inflow logic:
+
+- Vehicles spawn at entry nodes
+- Inflow rate varies by time window
+- Support peak and off-peak demand
+- Randomized but reproducible (seeded)
+
+----------------------------------------------------
+
+3. SIMULATION ENGINE
+-------------------
+
+Use discrete time steps.
+
+At each time step:
+1. Update traffic signals
+2. Move vehicles if capacity allows
+3. Enforce speed and lane limits
+4. Update queues at intersections
+5. Propagate delays downstream
+6. Record metrics
+
+The simulation must allow:
+- Congestion formation
+- Queue spillback
+- Bottleneck emergence
+
+----------------------------------------------------
+
+4. POLICY & INTERVENTION ENGINE
+------------------------------
+
+Implement controlled interventions:
+
+- Add/remove bus lane
+- Modify signal timing
+- Restrict vehicle class
+- Increase demand
+
+Interventions must:
+- Only change declared parameters
+- Never bypass simulation logic
+- Be reversible for baseline comparison
+
+----------------------------------------------------
+
+5. METRICS & LOGGING
+-------------------
+
+Track per time step and per run:
+
+- Travel time per vehicle
+- Average travel time
+- Queue length per intersection
+- Throughput
+- Bottleneck locations
+- Delay propagation
+
+Export metrics as structured JSON.
+
+----------------------------------------------------
+
+6. AI EXPLANATION ENGINE (MICROSOFT AI)
+--------------------------------------
+
+Integrate:
+- Azure OpenAI for explanation
+- Azure Machine Learning for pattern detection
+
+Responsibilities:
+- Compare baseline vs intervention metrics
+- Detect second-order effects
+- Generate causal explanations
+- Produce risk flags
+
+AI must NOT:
+- Control traffic
+- Suggest deployment
+- Override simulation data
+
+----------------------------------------------------
+
+7. FRONTEND (MVP)
+-----------------
+
+Build a simple web interface:
+
+- Network map visualization
+- Policy controls
+- Simulation run button
+- Timeline playback
+- Metrics dashboard
+- AI explanation panel
+
+Clarity > aesthetics.
+
+----------------------------------------------------
+
+8. DEMO REQUIREMENTS
+--------------------
+
+The system must support a 2-minute demo:
+- Show baseline congestion
+- Apply policy change
+- Run simulation
+- Show differences
+- Display AI explanation
+- Highlight unintended effect
+
+====================================================
+TECHNOLOGY CONSTRAINTS
+====================================================
+
+- Backend: Python
+- Simulation: custom logic (not black-box ML)
+- AI: Azure OpenAI + Azure ML
+- Frontend: any web framework
+- Data: CSV / JSON
+
+====================================================
+QUALITY REQUIREMENTS
+====================================================
+
+- Deterministic runs when seeded
+- Clear separation of modules
+- Readable, documented code
+- Reproducible results
+- No hardcoded policy logic
+
+====================================================
+IMPORTANT CONSTRAINTS
+====================================================
+
+- Do NOT build live traffic control
+- Do NOT build navigation or routing apps
+- Do NOT fake simulation outputs
+- Do NOT treat AI as a cosmetic feature
+
+====================================================
+DELIVERABLES
+====================================================
+
+- Working MVP
+- Simulation engine
+- Policy engine
+- Metrics outputs
+- AI explanation integration
+- Demo-ready UI
+
+====================================================
+END OF DEVELOPMENT PROMPT
+====================================================
